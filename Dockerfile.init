@@ -1,0 +1,9 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install Vite globally
+RUN npm install -g create-vite
+
+# Create new Vite React TypeScript project in the current directory
+CMD ["sh", "-c", "create-vite . --template react-ts && npm install react react-dom framer-motion && npm install -D tailwindcss postcss autoprefixer typescript @types/react @types/react-dom && npx tailwindcss init -p && chown -R node:node /app"]
