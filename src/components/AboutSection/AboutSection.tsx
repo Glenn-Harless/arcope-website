@@ -75,7 +75,7 @@ const AboutSection = () => {
           
           {/* Influences Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
-            {['Ambient', 'Experimental', 'Generative', 'Modular', 'Cinematic', 'Minimal', 'Spatial', 'Textural'].map((tag, index) => (
+            {['Ambient', 'Experimental', 'Generative', 'Modular', 'Cinematic', 'Minimal', 'Spatial', 'Textural'].map((tag) => (
               <motion.div
                 key={tag}
                 className="bg-gray-100 rounded-md p-3 text-center text-sm"

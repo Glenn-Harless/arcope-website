@@ -28,8 +28,8 @@ const Layout = ({ children }: LayoutProps) => {
     // Much more visible particles
     const properties = {
       bgColor: 'rgba(255, 255, 255, 0.15)',
-      particleColor: 'rgba(80, 80, 80, 0.3)', // Darker, more opaque particles
-      particleRadius: 1.2, // Much larger particles
+      particleColor: 'rgba(60, 60, 60, 0.5)', // Darker, more opaque particles
+      particleRadius: 1.5, // Much larger particles
       particleCount: 60, // More particles
       particleMaxVelocity: 0.1, // Faster movement
       lineLength: 250, // Longer connection lines
@@ -62,6 +62,7 @@ const Layout = ({ children }: LayoutProps) => {
       }
       
       reDraw() {
+        if (!ctx) return;
         ctx.beginPath();
         ctx.arc(this.x, this.y, properties.particleRadius, 0, Math.PI * 2);
         ctx.closePath();
@@ -84,6 +85,7 @@ const Layout = ({ children }: LayoutProps) => {
     const particles: Particle[] = [];
     
     function drawLines() {
+      if (!ctx) return;
       let x1, y1, x2, y2, length, opacity;
       for (let i = 0; i < particles.length; i++) {
         for (let j = i; j < particles.length; j++) {
@@ -94,9 +96,9 @@ const Layout = ({ children }: LayoutProps) => {
           length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
           
           if (length < properties.lineLength) {
-            opacity = (1 - length / properties.lineLength) * 0.2; // Higher opacity
-            ctx.lineWidth = 0.8; // Thicker lines
-            ctx.strokeStyle = `rgba(100, 100, 100, ${opacity})`;
+            opacity = (1 - length / properties.lineLength) * 0.3; // Higher opacity
+            ctx.lineWidth = 1.0; // Thicker lines
+            ctx.strokeStyle = `rgba(80, 80, 80, ${opacity})`;
             ctx.beginPath();
             ctx.moveTo(x1, y1);
             ctx.lineTo(x2, y2);
@@ -116,6 +118,7 @@ const Layout = ({ children }: LayoutProps) => {
     }
     
     function loop() {
+      if (!ctx) return;
       ctx.fillStyle = properties.bgColor;
       ctx.fillRect(0, 0, width, height);
       reDrawParticles();
@@ -138,6 +141,7 @@ const Layout = ({ children }: LayoutProps) => {
     }
     
     function resizeCanvas() {
+      if (!canvas) return;
       width = window.innerWidth;
       height = window.innerHeight;
       
@@ -157,39 +161,22 @@ const Layout = ({ children }: LayoutProps) => {
     resizeCanvas();
     init();
     
-    // Force a redraw after a short delay to ensure canvas is visible
-    setTimeout(() => {
-      console.log("Forcing redraw");
-      resizeCanvas();
-      init();
-    }, 500);
-    
+    // Cleanup function
     return () => {
-      console.log("Cleaning up event listeners");
       window.removeEventListener('resize', resizeCanvas);
     };
   }, []);
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-white text-text font-montserrat">
-      {/* Make sure canvas is absolutely positioned and covers the whole viewport */}
-      <canvas 
-        ref={canvasRef} 
-        className="fixed top-0 left-0 w-full h-full" 
-        style={{ 
-          zIndex: 0, 
-          pointerEvents: 'none', 
-          display: 'block' 
-        }} 
+    <div className="layout relative min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full opacity-30"
+        style={{ zIndex: 1 }}
       />
-      
-      <div className="content-wrapper flex flex-col min-h-screen justify-center items-center relative" style={{ zIndex: 10 }}>
+      <div className="relative z-10">
         {children}
       </div>
-      
-      <footer className="px-5 py-5 text-center text-xs opacity-50 tracking-wider absolute bottom-5 w-full text-gray-700" style={{ zIndex: 10 }}>
-        © {new Date().getFullYear()} ARCOVA
-      </footer>
     </div>
   );
 };

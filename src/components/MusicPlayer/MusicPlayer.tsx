@@ -1,7 +1,7 @@
 
 // src/components/MusicPlayer/MusicPlayer.tsx
 import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 interface Track {
   title: string;
